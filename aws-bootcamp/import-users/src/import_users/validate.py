@@ -1,25 +1,30 @@
-import email_validator
 import re
 
-
-class ValidEmail:
-    """Provides components of a validated email address"""
-    def __init__(self, email: str) -> None:
-        self._errors = []
-        try:
-            self.email = email_validator.validate_email(email)
-            self.username = self.email.ascii_local_part
-            self.domain = self.email.ascii_domain
-        except email_validator.exceptions_types.EmailSyntaxError as e:
-            self._errors.append(str(e))
+import email_validator
 
 
-# The username should be ValidEmail(email).username
+def email_to_user_name(email: str) -> str:
+    """Convert an email in firstname.lastname@companyname.com
+    to a valid AWS IAM username.
+    """
+    valid_email = email_validator.validate_email(email)
+    local_part = valid_email.ascii_local_part
+    if local_part is None:
+        raise ValueError("email user name is not ascii")
+    else:
+        return local_part
 
 
-# The group name should be taken from the Team field of the CSV.
-# It should be in PascalCase format, and only contain ascii english letters.
-def team_to_group_name(team_name: str) -> str:
-    """Convert a team name (which may be any arbitray string) into PascalCase with non-alphabetic characters stripped."""
-    cap_words = (re.sub(r'[^A-Za-z]', '', w).capitalize() for w in team_name.split())
-    return ''.join(cap_words)
+def team_to_group_name(team: str) -> str:
+    """Convert a team name (which may be any arbitrary string)
+    into PascalCase with non-alphabetic characters stripped.
+    Words that are all uppercase remain uppercase.
+    """
+    cleaned_team = re.sub(r"[^A-Za-z ]", "", team)
+    cleaned_words = [word if word.isupper() else word.capitalize() for word in cleaned_team.split()]
+    result = "".join(cleaned_words)
+
+    if len(result) == 0:
+        raise ValueError("team was either all special characters or all spaces")
+    else:
+        return result
