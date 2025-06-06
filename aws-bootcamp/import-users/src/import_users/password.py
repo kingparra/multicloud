@@ -8,6 +8,8 @@ def generate_password(
     """Generate a password for IAM user login profile creation."""
     if length < min_lower + min_upper + min_digit + min_punct:
         raise ValueError("length must be greater than or equal to lower + upper + digit + punct")
+    if any(x < 0 for x in [length, min_lower, min_upper, min_digit, min_punct]):
+        raise ValueError("All parameters must be greater than or equal to 0.")
 
     # Limit punctuation so output CSV is easier to parse (no commas or quotes).
     custom_punct = "!@#$%^&-_+.[]()"
