@@ -7,17 +7,21 @@ readme = "README.md"
 requires-python = ">=3.13"
 # You can add an editable dependency with `uv add --editable $path_to_package`
 dependencies = [
-    "boto3>=1.38.24",
+    "boto3[crt]>=1.38.24",
     "email-validator>=2.2.0",
+    "pydantic>=2.11.5",
 ]
 
 [dependency-groups]
 dev = [
+    "boto3-stubs[iam]>=1.38.31", # type hints for boto3 iam
+    "coverage[toml]>=7.8.2", # measure code coverage
     "icecream>=2.1.4", # for printf debugging
     "moto[iam]>=5.1.5", # for mocking AWS services in tests
     "poethepoet>=0.34.0", # used to run project specific scripts/tasks
     "pyright>=1.1.401", # for static type checking
     "pytest>=8.3.5", # for writing automated tests
+    "pytest-cov>=6.1.1", # integrate coverage with pytest
     "ruff>=0.11.11", # for formatting and linting
 ]
 
@@ -60,6 +64,18 @@ known-first-party = ["postmodern"]
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules" # test docstrings in modules
+# Ignore error cause by botocore https://github.com/boto/boto3/issues/3889
+filterwarnings = [
+    "ignore:datetime.datetime.utcnow:DeprecationWarning:botocore"
+]
+
+[tool.coverage.run]
+source = ["import_users"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
 
 [project.scripts]
 # This is the entry point for the program, you can run it with `uv run import-users`
@@ -76,5 +92,6 @@ fmt = "ruff format"
 lint = "ruff check --fix"
 check = "pyright"
 test = "pytest"
+cov = "coverage report -m"
 # run all the above with `uv run poe all`
-all = [ {ref="fmt"}, {ref="lint"}, {ref="check"}, {ref="test"} ]
+all = [ {ref="fmt"}, {ref="lint"}, {ref="check"}, {ref="test"}, {ref="cov"}]
