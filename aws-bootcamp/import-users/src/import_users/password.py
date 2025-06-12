@@ -5,7 +5,12 @@ import string
 def generate_password(
     length: int = 30, min_lower: int = 2, min_upper: int = 2, min_digit: int = 2, min_punct: int = 2
 ) -> str:
-    """Generate a password for IAM user login profile creation."""
+    """Generate a password for AWS IAM user login profile creation.
+
+    :raises ValueError: Will throw ValueError if the length
+    parameter is smaller than the combination of min_{chartype}
+    parameters, or if any of the parameters are less than 0.
+    """
     if length < min_lower + min_upper + min_digit + min_punct:
         raise ValueError("length must be greater than or equal to lower + upper + digit + punct")
     if any(x < 0 for x in [length, min_lower, min_upper, min_digit, min_punct]):
