@@ -10,7 +10,7 @@ This program creates IAM users and groups from a CSV file with a fixed format. I
 The csv file should have the following headers: `Name,Email,Team`.
 
 - `Name` is a full name, with multiple words, which may include whitespace and special characters.
-- `Email` is a valid email address, which may contain unicode.
+- `Email` is a valid email address in `firstname.lastname@companyname.com` format.
 - `Team` is the name of a team such as `Network Admins`, which may contain spaces and special characters.
 
 You can find an example of the input format in `data/sample-input.csv`. There is also an corresponding example output in `data/sample-report.csv` and `sample-log.json`.
@@ -30,13 +30,13 @@ When you run `import-users --in input.csv --out report.csv --log log.json`, the 
 
     - Create IAM users and groups from data in the CSV.
     - Created users will be required to set a new password on login.
-    - Created users will also be requried them to set up MFA on first login (which is accomplised by adding them to the `MFARequired` group).
+    - Created users will also be required them to set up MFA on first login (which is accomplished by adding them to the `MFARequired` group).
 
 - Log the results of any AWS API calls to `log.json`.
 - Generate a csv report with the username, group name, and password.
 
 ## Installation
-You can run this project witout installation using `uv`.
+You can run this project without installation using `uv`.
 
 - First, [install uv](https://docs.astral.sh/uv/getting-started/installation/).
 - Then, run the cli with `uv run import-users --in input.csv --out report.csv --log log.json`, substituting in the relevant filenames.
