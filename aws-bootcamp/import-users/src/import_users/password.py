@@ -23,12 +23,14 @@ def generate_password(
     while True:
         password = "".join(secrets.choice(goodset) for _ in range(length))
         checks = {
-            "has_min_lower": sum(c.islower() for c in password) >= min_lower,
-            "has_min_upper": sum(c.isupper() for c in password) >= min_upper,
-            "has_min_digit": sum(c.isdigit() for c in password) >= min_digit,
+            # Bools are implicitly treated as 1 or 0 by sum. 
+            # sum([True, False, True]) === 1
+            "has_min_lower": sum(map(str.islower, password)) >= min_lower,
+            "has_min_upper": sum(map(str.isupper, password)) >= min_upper,
+            "has_min_digit": sum(map(str.isdigit, password)) >= min_digit,
             "has_min_punct": sum(c in custom_punct for c in password) >= min_punct,
         }
-        if all(v for v in checks.values()):
+        if all(checks.values()):
             break
 
     return password

@@ -15,14 +15,15 @@ dependencies = [
 [dependency-groups]
 dev = [
     "boto3-stubs[iam]>=1.38.31", # type hints for boto3 iam
-    "coverage[toml]>=7.8.2", # measure code coverage
-    "icecream>=2.1.4", # for printf debugging
-    "moto[iam]>=5.1.5", # for mocking AWS services in tests
-    "poethepoet>=0.34.0", # used to run project specific scripts/tasks
-    "pyright>=1.1.401", # for static type checking
-    "pytest>=8.3.5", # for writing automated tests
-    "pytest-cov>=6.1.1", # integrate coverage with pytest
-    "ruff>=0.11.11", # for formatting and linting
+    "codespell>=2.4.1",          # check for typos in code and docs
+    "coverage[toml]>=7.8.2",     # measure code coverage
+    "icecream>=2.1.4",           # for printf debugging
+    "moto[iam]>=5.1.5",          # for mocking AWS services in tests
+    "poethepoet>=0.34.0",        # used to run project specific scripts/tasks
+    "pyright>=1.1.401",          # for static type checking
+    "pytest>=8.3.5",             # for writing automated tests
+    "pytest-cov>=6.1.1",         # integrate coverage with pytest
+    "ruff>=0.11.11",             # for formatting and linting
 ]
 
 # necessary for project.scripts to work.
@@ -30,28 +31,28 @@ dev = [
 package = true
 
 [tool.pyright]
-venvPath = "." # uv installs the venv in the current dir
-venv = ".venv" # in a folder called `.venv`
-strict = ["**/*.py"] # use 'strict' checking on all files
+venvPath = "."         # uv installs the venv in the current dir
+venv = ".venv"         # in a folder called `.venv`
+strict = ["**/*.py"]   # use 'strict' checking on all files
 pythonVersion = "3.13" # if library, specify the _lowest_ you support
 
 [tool.ruff]
 # if this is a library, enter the _minimum_ version you
 # want to support, otherwise do py313
 target-version = "py313"
-line-length = 120  # use whatever number makes you happy
+line-length = 120        # use whatever number makes you happy
 
 [tool.ruff.lint]
 # you can see the looong list of rules here:
 # https://docs.astral.sh/ruff/rules/
 # here's a couple to start with
 select = [
-	"A",    # warn about shadowing built-ins
-	"E",    # style stuff, whitespaces
-	"F",    # important pyflakes lints
-	"I",    # import sorting
-	"N",    # naming
-	"T100", # breakpoints (probably don't want these in prod!)
+    "A",    # warn about shadowing built-ins
+    "E",    # style stuff, whitespaces
+    "F",    # important pyflakes lints
+    "I",    # import sorting
+    "N",    # naming
+    "T100", # breakpoints (probably don't want these in prod!)
 ]
 # if you're feeling confident you can do:
 # select = ["ALL"]
@@ -65,9 +66,7 @@ known-first-party = ["postmodern"]
 [tool.pytest.ini_options]
 addopts = "--doctest-modules" # test docstrings in modules
 # Ignore error cause by botocore https://github.com/boto/boto3/issues/3889
-filterwarnings = [
-    "ignore:datetime.datetime.utcnow:DeprecationWarning:botocore"
-]
+filterwarnings = ["ignore:datetime.datetime.utcnow:DeprecationWarning:botocore"]
 
 [tool.coverage.run]
 source = ["src/import_users"]
@@ -76,6 +75,11 @@ branch = true
 [tool.coverage.report]
 fail_under = 90
 show_missing = true
+
+[tool.codespell]
+skip = '**/*.egg-info,**/__pycache__,./data'
+count = true
+quiet-level = 3
 
 [project.scripts]
 # This is the entry point for the program, you can run it with `uv run import-users`
@@ -93,5 +97,13 @@ lint = "ruff check --fix"
 check = "pyright"
 test = "pytest"
 cov = "coverage report -m"
+spell = "codespell"
 # run all the above with `uv run poe all`
-all = [ {ref="fmt"}, {ref="lint"}, {ref="check"}, {ref="test"}, {ref="cov"}]
+all = [
+    { ref = "fmt" },
+    { ref = "spell" },
+    { ref = "lint" },
+    { ref = "check" },
+    { ref = "test" },
+    { ref = "cov" },
+]
